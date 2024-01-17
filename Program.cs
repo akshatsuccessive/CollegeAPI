@@ -1,3 +1,6 @@
+using DependencyInjection_WebAPI.Data;
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add(injecting) services to the container(or application).
@@ -6,6 +9,11 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+
+// Injecting a service
+builder.Services.AddDbContext<StudentsDbContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("MyConnectionString")));
 
 var app = builder.Build();
 
