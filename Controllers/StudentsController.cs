@@ -118,6 +118,18 @@ namespace DependencyInjection_WebAPI.Controllers
             return Ok(StudentDTO);
         }
 
-
+        [HttpDelete]
+        [Route("{id}")]
+        public async Task<IActionResult> DeleteStudent([FromRoute] Guid id)
+        {
+            var student = await context.Students.FindAsync(id);
+            if(student == null)
+            {
+                return NotFound();
+            }
+            context.Students.Remove(student);
+            await context.SaveChangesAsync();
+            return Ok("Student Deleted Successfully");
+        }
     }
 }
