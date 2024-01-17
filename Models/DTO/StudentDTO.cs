@@ -1,6 +1,8 @@
-﻿namespace DependencyInjection_WebAPI.Models.DomainModels
+﻿using DependencyInjection_WebAPI.Models.DomainModels;
+
+namespace DependencyInjection_WebAPI.Models.DTO
 {
-    public class Student
+    public class StudentDTO
     {
         public Guid Id { get; set; }
         public string Name { get; set; }
@@ -10,9 +12,5 @@
         // Relationship between models
         public Guid CourseId { get; set; }
         public Guid CollegeId { get; set; }
-
-        // Navigation properties
-        public Course Course { get; internal set; }
-        public College College { get; internal set; }
     }
 }
