@@ -3,6 +3,8 @@ using DependencyInjection_WebAPI.Models.DTO;
 using DependencyInjection_WebAPI.Models.DomainModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 
 namespace DependencyInjection_WebAPI.Controllers
 {
@@ -64,31 +66,38 @@ namespace DependencyInjection_WebAPI.Controllers
         [HttpPost]
         public async Task<IActionResult> AddStudent([FromBody] AddStudentRequestDTO request)
         {
-            // DTO to DomainModel
-            var StudentDomainModel = new Student()
+            try
             {
-                Name = request.Name,
-                Age = request.Age,
-                ImageURL = request.ImageURL,
-                CourseId = request.CourseId,
-                CollegeId = request.CollegeId
-            };
+                // DTO to DomainModel
+                var StudentDomainModel = new Student()
+                {
+                    Name = request.Name,
+                    Age = request.Age,
+                    ImageURL = request.ImageURL,
+                    CourseId = request.CourseId,
+                    CollegeId = request.CollegeId
+                };
 
-            await context.Students.AddAsync(StudentDomainModel);
-            await context.SaveChangesAsync();
+                await context.Students.AddAsync(StudentDomainModel);
+                await context.SaveChangesAsync();
 
-            // DomainModel to DTO and return back to client
-            var StudentDTO = new StudentDTO()
+                // DomainModel to DTO and return back to client
+                var StudentDTO = new StudentDTO()
+                {
+                    Id = StudentDomainModel.Id,
+                    Name = StudentDomainModel.Name,
+                    Age = StudentDomainModel.Age,
+                    ImageURL = StudentDomainModel.ImageURL,
+                    CollegeId = StudentDomainModel.CollegeId,
+                    CourseId = StudentDomainModel.CourseId
+                };
+
+                return CreatedAtAction(nameof(GetStudentById), new { id = StudentDTO.Id }, StudentDTO);
+            }
+            catch(DbUpdateException ex)
             {
-                Id = StudentDomainModel.Id,
-                Name = StudentDomainModel.Name,
-                Age = StudentDomainModel.Age,
-                ImageURL = StudentDomainModel.ImageURL,
-                CollegeId = StudentDomainModel.CollegeId,
-                CourseId = StudentDomainModel.CourseId
-            };
-
-            return CreatedAtAction(nameof(GetStudentById), new {id = StudentDTO.Id}, StudentDTO);
+                return StatusCode(500, "Invalid CollegeId or CourseID");
+            }
         }
 
 
