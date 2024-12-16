@@ -1,6 +1,7 @@
 ﻿using DependencyInjection_WebAPI.Models.DomainModels;
 using Microsoft.EntityFrameworkCore;
 // this is the comment used for testing
+// test commit 2
 namespace DependencyInjection_WebAPI.Data
 {
     public class StudentsDbContext : DbContext
